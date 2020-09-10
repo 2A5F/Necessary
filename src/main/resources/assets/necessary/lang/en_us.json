@@ -1,0 +1,15 @@
+{
+  "necessary.tpa.prefix": "[TP]",
+  "necessary.tpa.req.msg": "Teleport request has been sent to {{target}}",
+  "necessary.tpa.req.to": "{{asker}} request teleport to {{you}}",
+  "necessary.tpa.req.you": "you",
+  "necessary.tpa.yes": "[accept]",
+  "necessary.tpa.no": "[reject]",
+  "necessary.tpa.yes.to.hover": "Accept TP, requester will teleport to you .",
+  "necessary.tpa.no.to.hover": "Reject teleport request",
+  "necessary.tpa.res.to.yes": "{{target}} accepted your teleport request",
+  "necessary.tpa.res.to.no": "{{target}} rejected your teleport request",
+  "necessary.tpa.res.msg.yes": "Accepted {{asker}}'s teleport request",
+  "necessary.tpa.res.msg.no": "Rejected {{asker}}'s teleport request",
+  "necessary.tpa.res.msg.nil": "The target is not online or the request has expired"
+}

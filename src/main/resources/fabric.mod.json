@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "necessary",
+  "version": "${version}",
+
+  "name": "Necessary",
+  "description": "Necessary like Essential",
+  "authors": [
+    "2a5f"
+  ],
+  "contact": {
+    "homepage": "https://github.com/2a5f/necessary",
+    "sources": "https://github.com/2a5f/necessary"
+  },
+
+  "license": "MIT",
+  "icon": "assets/necessary/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "co.volight.necessary.NecKt::init"
+    ]
+  },
+  "mixins": [
+    "necessary.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.8.7",
+    "fabric": "*",
+    "fabric-language-kotlin": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
