@@ -3,10 +3,7 @@ package co.volight.necessary.lang
 import co.volight.necessary.Nec
 import com.google.gson.Gson
 import net.fabricmc.loader.api.FabricLoader
-import java.nio.file.FileSystems
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.PathMatcher
+import java.nio.file.*
 
 
 typealias TextName = String
@@ -17,6 +14,7 @@ typealias LangMap = Map<LangName, LangTextMap>
 typealias ModLangMap = MutableMap<ModName, LangMap>
 
 object Lang {
+    const val logName = "[Nec|Lang]"
     private val langs: ModLangMap = mutableMapOf()
 
     fun getStr(langName: LangName, modName: ModName, textName: TextName): LangStr? {
@@ -27,26 +25,28 @@ object Lang {
         val container = FabricLoader.getInstance().getModContainer(modname).orElseThrow { throw RuntimeException("Mod \"${modname}\" not loaded") }
         val langDir = container.getPath(path ?: "assets/${modname}/lang/")
         try {
-            val langMap = loadLangMap(langDir)
+            val langMap = loadLangMap(modname, langDir)
             langs[modname] = langMap
-            Nec.LOGGER.info("Language files of mod \"${modname}\" loaded")
+            Nec.LOGGER.info("$logName Language files of mod \"${modname}\" loaded")
         } catch (e: Exception) {
-            Nec.LOGGER.error("Failed to load the language file of mod \"${modname}\"", e)
+            Nec.LOGGER.error("$logName Failed to load the language file of mod \"${modname}\"", e)
         }
     }
 
-    private val jsonFile: PathMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.json")
-    private fun loadLangMap(langDir: Path): LangMap {
-        val g = sequence {
+    private fun loadLangMap(modname: ModName, langDir: Path): LangMap {
+        val jsonFile: PathMatcher = langDir.fileSystem.getPathMatcher("glob:**/*.json")
+        return sequence {
             Files.walk(langDir).use { paths ->
-                for (path in paths.filter(Files::isRegularFile).filter(jsonFile::matches)) {
+                for (path in paths.filter { !Files.isDirectory(it) && jsonFile.matches(it) }) {
+                    Nec.LOGGER.debug("$logName loading $path")
                     val textMap = loadTextMap(path)
-                    val name = path.fileName.toString()
-                    yield(Pair(name.substring(0, name.length - 5), textMap))
+                    val rawMame = path.fileName.toString()
+                    val name = rawMame.substring(0, rawMame.length - 5)
+                    Nec.LOGGER.info("$logName mod \"${modname}\" loaded lang \"${name}\"")
+                    yield(Pair(name, textMap))
                 }
             }
-        }
-        return g.toMap()
+        }.toMap()
     }
 
     private fun loadTextMap(path: Path): LangTextMap {

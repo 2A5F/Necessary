@@ -15,7 +15,7 @@ fun ServerPlayerEntity.langText(modName: ModName, textName: TextName, args: Map<
     val langName = PlayerLangInfo.get(this)
     val str = Lang.getStr(langName, modName, textName)
     if (str == null) {
-        Nec.LOGGER.info("The language \"${langName}\" used by player ${this.entityName} does not exist")
+        Nec.LOGGER.info("${Lang.logName} The language \"${langName}\" used by player ${this.entityName} does not exist")
         return LiteralText(textName)
     }
     val texts = str.strs.map {
@@ -43,7 +43,7 @@ fun langText(langName: LangName, modName: ModName, textName: TextName) : Mutable
 fun langText(langName: LangName, modName: ModName, textName: TextName, args: Map<String, () -> Text>) : MutableText {
     val str = Lang.getStr(langName, modName, textName)
     if (str == null) {
-        Nec.LOGGER.info("The language \"${langName}\" does not exist")
+        Nec.LOGGER.info("${Lang.logName} The language \"${langName}\" does not exist")
         return LiteralText(textName)
     }
     val texts = str.strs.map {

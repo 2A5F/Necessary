@@ -1,6 +1,7 @@
 package co.volight.necessary.events
 
 import co.volight.necessary.Nec
+import co.volight.necessary.lang.Lang
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.network.ServerPlayerEntity
@@ -13,7 +14,7 @@ object PlayerLangInfo {
     fun get(player: ServerPlayerEntity): String {
         val r = get(player.uuid)
         if (r == null) {
-            Nec.LOGGER.warn("Can't find the language information of player ${player.entityName} ")
+            Nec.LOGGER.warn("${Lang.logName} Can't find the language information of player ${player.entityName} ")
             return "en_us"
         }
         return r
@@ -35,7 +36,7 @@ object PlayerLangInfo {
             lastTime = now
             gcTick(it)
         })
-        Nec.LOGGER.info("PlayerLangInfo gcTick registered")
+        Nec.LOGGER.info("${Nec.logName} PlayerLangInfo gcTick registered")
     }
 
     fun regEvent() {

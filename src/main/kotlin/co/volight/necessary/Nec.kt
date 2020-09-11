@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager
 
 object Nec {
     const val id = "necessary"
+    const val logName = "[Nec]"
     val LOGGER = LogManager.getLogger(id)!!
 }
 

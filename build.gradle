@@ -90,3 +90,11 @@ publishing {
 }
 
 compileKotlin.kotlinOptions.jvmTarget = "1.8"
+
+task copyBuildToRealServer(type: Copy) {
+    from "build/libs/${archivesBaseName}-${version}.jar"
+    rename { name ->
+        name.replace("-${version}", "-debug")
+    }
+    into "run/real/mods/"
+}
