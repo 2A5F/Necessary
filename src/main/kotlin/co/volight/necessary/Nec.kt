@@ -6,13 +6,8 @@ import co.volight.necessary.lang.Lang
 import org.apache.logging.log4j.LogManager
 
 object Nec {
-    const val id = Necessary.id
-    val LOGGER = Necessary.LOGGER
-}
-
-object Necessary {
     const val id = "necessary"
-    val LOGGER = LogManager.getLogger()!!
+    val LOGGER = LogManager.getLogger(id)!!
 }
 
 fun init() {

@@ -35,6 +35,7 @@ object PlayerLangInfo {
             lastTime = now
             gcTick(it)
         })
+        Nec.LOGGER.info("PlayerLangInfo gcTick registered")
     }
 
     fun regEvent() {

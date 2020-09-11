@@ -45,6 +45,7 @@ object Tpa {
             )
             dispatcher.register(literal(Names.tpask).redirect(node))
         }
+        Nec.LOGGER.info("Command [${Names.tpa}, ${Names.tpask}] registered")
 
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             val node = dispatcher.register(
@@ -54,6 +55,7 @@ object Tpa {
             dispatcher.register(literal(Names.tpaccept).redirect(node))
             dispatcher.register(literal(Names.tpacc).redirect(node))
         }
+        Nec.LOGGER.info("Command [${Names.tpayes}, ${Names.tpaccept}, ${Names.tpacc}] registered")
 
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             val node = dispatcher.register(
@@ -64,6 +66,7 @@ object Tpa {
             dispatcher.register(literal(Names.tpreject).redirect(node))
             dispatcher.register(literal(Names.tprej).redirect(node))
         }
+        Nec.LOGGER.info("Command [${Names.tpano}, ${Names.tpdeny}, ${Names.tpreject}, ${Names.tprej}] registered")
     }
 }
 
