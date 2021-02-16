@@ -1,10 +1,7 @@
-package co.volight.necessary.commands.tpa
+package co.volight.necessary.commands
 
 import co.volight.expire.ExpireTable
 import co.volight.necessary.Nec
-import co.volight.necessary.commands.sendStyledLangMsg
-import co.volight.necessary.commands.sendSysMsg
-import co.volight.necessary.commands.tpPrefix
 import co.volight.necessary.text.*
 import co.volight.necessary.utils.tp
 import com.mojang.brigadier.context.CommandContext
