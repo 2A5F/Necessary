@@ -18,7 +18,7 @@ import java.util.*
 
 data class TpData(val id: UUID, val here: Boolean)
 
-var tptable: ExpireTable<UUID, TpData> = ExpireTable(60000)
+val tpaTable: ExpireTable<UUID, TpData> = ExpireTable(60000)
 
 object Names {
     const val target = "target"
@@ -90,7 +90,7 @@ fun tpa(ctx: CommandContext<ServerCommandSource>): Int {
     val sender = source.player
     val target = EntityArgumentType.getPlayer(ctx, Names.target)
 
-    tptable[target.uuid] = TpData(sender.uuid, false)
+    tpaTable[target.uuid] = TpData(sender.uuid, false)
 
     sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.msg.to", { color(Formatting.GOLD) })  {
         put("target") { LiteralText(target.entityName).withStyle { color(Formatting.WHITE) } }
@@ -133,7 +133,7 @@ fun tapHere(ctx: CommandContext<ServerCommandSource>): Int {
     val sender = source.player
     val target = EntityArgumentType.getPlayer(ctx, Names.target)
 
-    tptable[target.uuid] = TpData(sender.uuid, true)
+    tpaTable[target.uuid] = TpData(sender.uuid, true)
 
     sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.msg.here", { color(Formatting.GOLD) })  {
         put("target") { LiteralText(target.entityName).withStyle { color(Formatting.WHITE) } }
@@ -176,7 +176,7 @@ fun tpaYes(ctx: CommandContext<ServerCommandSource>): Int {
     val source = ctx.source
     val sender = source.player
 
-    val targetData = tptable.remove(sender.uuid)
+    val targetData = tpaTable.remove(sender.uuid)
     val target = if (targetData == null) null else source.minecraftServer.playerManager.getPlayer(targetData.id)
 
     return if (targetData == null ||target == null) {
@@ -200,7 +200,7 @@ fun tpaNo(ctx: CommandContext<ServerCommandSource>): Int {
     val source = ctx.source
     val sender = source.player
 
-    val targetData = tptable.remove(sender.uuid)
+    val targetData = tpaTable.remove(sender.uuid)
     val target = if (targetData == null) null else source.minecraftServer.playerManager.getPlayer(targetData.id)
 
     return if (targetData == null || target == null) {
