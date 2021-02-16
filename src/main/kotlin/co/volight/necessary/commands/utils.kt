@@ -1,8 +1,10 @@
 package co.volight.necessary.commands
 
 import co.volight.cell.Cell
+import co.volight.necessary.Nec
 import co.volight.necessary.lang.ModName
 import co.volight.necessary.lang.TextName
+import co.volight.necessary.text.color
 import co.volight.necessary.text.langText
 import co.volight.necessary.text.withStyle
 import net.minecraft.entity.Entity
@@ -11,7 +13,10 @@ import net.minecraft.text.LiteralText
 import net.minecraft.text.MutableText
 import net.minecraft.text.Style
 import net.minecraft.text.Text
+import net.minecraft.util.Formatting
 import net.minecraft.util.Util
+
+fun ServerPlayerEntity.tpPrefix(): MutableText = this.langText(Nec.id, "${Nec.id}.tpa.prefix").withStyle { color( Formatting.GRAY) }
 
 fun Entity.sendSysMsg(text: Text) {
     this.sendSystemMessage(text, Util.NIL_UUID)
