@@ -1,7 +1,10 @@
 {
   "necessary.tpa.prefix": "[TP]",
-  "necessary.tpa.req.msg.to": "已发送传送请求给 {{target}}",
-  "necessary.tpa.req.msg.here": "已发送传送请求给 {{target}}",
+  "necessary.tpa.req.sender.to": "已发送传送请求给 {{target}}",
+  "necessary.tpa.req.sender.here": "已发送传送请求给 {{target}}",
+  "necessary.tpa.req.sender.here.all": "已发送传送请求给所有人",
+  "necessary.tpa.req.sender.self": "请不要向你自己发送传送请求",
+  "necessary.tpa.req.sender.alone": "但是服务器里只有你一个人",
   "necessary.tpa.req.to": "{{asker}} 请求传送到 {{you}} 身边",
   "necessary.tpa.req.here": "{{asker}} 请求将 {{you}} 传送到 {{him}} 身边",
   "necessary.tpa.req.you": "你",
@@ -16,7 +19,7 @@
   "necessary.tpa.req.to.no": "{{target}} 拒绝了你的传送请求",
   "necessary.tpa.req.here.yes": "{{target}} 接受了你的传送请求",
   "necessary.tpa.req.here.no": "{{target}} 拒绝了你的传送请求",
-  "necessary.tpa.res.msg.yes": "已接受 {{asker}} 的传送请求",
-  "necessary.tpa.res.msg.no": "已拒绝 {{asker}} 的传送请求",
-  "necessary.tpa.res.msg.nil": "对方不在线或请求已过期"
+  "necessary.tpa.res.sender.yes": "已接受 {{asker}} 的传送请求",
+  "necessary.tpa.res.sender.no": "已拒绝 {{asker}} 的传送请求",
+  "necessary.tpa.res.sender.nil": "对方不在线或请求已过期"
 }

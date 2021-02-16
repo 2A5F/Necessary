@@ -1,7 +1,10 @@
 {
   "necessary.tpa.prefix": "[TP]",
-  "necessary.tpa.req.msg.to": "Teleport request has been sent to {{target}}",
-  "necessary.tpa.req.msg.here": "Teleport request has been sent to {{target}}",
+  "necessary.tpa.req.sender.to": "Teleport request has been sent to {{target}}",
+  "necessary.tpa.req.sender.here": "Teleport request has been sent to {{target}}",
+  "necessary.tpa.req.sender.here.all": "Teleport request has been sent to everyone",
+  "necessary.tpa.req.sender.self": "Please don't send teleport request to yourself",
+  "necessary.tpa.req.sender.alone": "But you are alone on the server",
   "necessary.tpa.req.to": "{{asker}} request teleport to {{you}}",
   "necessary.tpa.req.here": "{{asker}} request teleport {{you}} to {{him}}",
   "necessary.tpa.req.you": "you",
@@ -16,7 +19,7 @@
   "necessary.tpa.req.to.no": "{{target}} rejected your teleport request",
   "necessary.tpa.req.here.yes": "{{target}} accepted your teleport request",
   "necessary.tpa.req.here.no": "{{target}} rejected your teleport request",
-  "necessary.tpa.res.msg.yes": "Accepted {{asker}}'s teleport request",
-  "necessary.tpa.res.msg.no": "Rejected {{asker}}'s teleport request",
-  "necessary.tpa.res.msg.nil": "The target is not online or the request has expired"
+  "necessary.tpa.res.sender.yes": "Accepted {{asker}}'s teleport request",
+  "necessary.tpa.res.sender.no": "Rejected {{asker}}'s teleport request",
+  "necessary.tpa.res.sender.nil": "The target is not online or the request has expired"
 }

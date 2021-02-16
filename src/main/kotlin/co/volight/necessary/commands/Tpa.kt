@@ -10,14 +10,16 @@ import net.minecraft.command.argument.EntityArgumentType
 import net.minecraft.server.command.CommandManager.argument
 import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.ClickEvent
 import net.minecraft.text.HoverEvent
 import net.minecraft.text.LiteralText
 import net.minecraft.util.Formatting
 import java.util.*
 
-data class TpaData(val id: UUID, val here: Boolean)
+data class TpaData(val sender: UUID, val here: Boolean)
 
+// target -> sender
 val TPA_TABLE: ExpireTable<UUID, TpaData> = ExpireTable(60000)
 
 object Names {
@@ -27,6 +29,8 @@ object Names {
     const val tpask = "tpask"
 
     const val tpahere = "tpahere"
+
+    const val tpaall = "tpaall"
 
     const val tpayes = "tpayes"
     const val tpaccept = "tpaccept"
@@ -64,6 +68,15 @@ object Tpa {
 
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             val node = dispatcher.register(
+                literal(Names.tpaall)
+                    .executes(::tpaAllHere)
+            )
+            dispatcher.register(literal(Names.tpask).redirect(node))
+        }
+        Nec.LOGGER.info("${Nec.logName} Command [${Names.tpaall}] registered")
+
+        CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
+            val node = dispatcher.register(
                 literal(Names.tpayes)
                     .executes(::tpaYes)
             )
@@ -83,16 +96,65 @@ object Tpa {
     }
 }
 
+fun tpaYes(ctx: CommandContext<ServerCommandSource>): Int {
+    val source = ctx.source
+    val sender = source.player
 
+    val targetData = TPA_TABLE.remove(sender.uuid)
+    val target = if (targetData == null) null else source.minecraftServer.playerManager.getPlayer(targetData.sender)
+
+    return if (targetData == null ||target == null) {
+        sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id,"${Nec.id}.tpa.res.sender.nil") { color(Formatting.RED) }
+        0
+    } else {
+        if (targetData.here) sender.tp(target) else target.tp(sender)
+
+        sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.res.sender.yes", { color(Formatting.GREEN) }) {
+            put("asker") { LiteralText(target.entityName).withStyle { color(Formatting.WHITE) } }
+        }
+
+        target.sendStyledLangMsg(target.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.${if (targetData.here) "here" else "to"}.yes", { color(Formatting.GREEN) }) {
+            put("target") { LiteralText(sender.entityName).withStyle { color(Formatting.WHITE) } }
+        }
+        1
+    }
+}
+
+fun tpaNo(ctx: CommandContext<ServerCommandSource>): Int {
+    val source = ctx.source
+    val sender = source.player
+
+    val targetData = TPA_TABLE.remove(sender.uuid)
+    val target = if (targetData == null) null else source.minecraftServer.playerManager.getPlayer(targetData.sender)
+
+    return if (targetData == null || target == null) {
+        sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id,"${Nec.id}.tpa.res.sender.nil") { color(Formatting.RED) }
+        0
+    } else {
+        sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.res.sender.no", { color(Formatting.RED) }) {
+            put("asker") { LiteralText(target.entityName).withStyle { color(Formatting.WHITE) } }
+        }
+
+        target.sendStyledLangMsg(target.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.${if (targetData.here) "here" else "to"}.no", { color(Formatting.RED) }) {
+            put("target") { LiteralText(sender.entityName).withStyle { color(Formatting.WHITE) } }
+        }
+        1
+    }
+}
 
 fun tpa(ctx: CommandContext<ServerCommandSource>): Int {
     val source = ctx.source
     val sender = source.player
     val target = EntityArgumentType.getPlayer(ctx, Names.target)
 
+    if (target.uuid == sender.uuid) {
+        sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.sender.self") { color(Formatting.RED) }
+        return 1
+    }
+
     TPA_TABLE[target.uuid] = TpaData(sender.uuid, false)
 
-    sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.msg.to", { color(Formatting.GOLD) })  {
+    sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.sender.to", { color(Formatting.GOLD) })  {
         put("target") { LiteralText(target.entityName).withStyle { color(Formatting.WHITE) } }
     }
 
@@ -128,17 +190,7 @@ fun tpa(ctx: CommandContext<ServerCommandSource>): Int {
     return 1
 }
 
-fun tapHere(ctx: CommandContext<ServerCommandSource>): Int {
-    val source = ctx.source
-    val sender = source.player
-    val target = EntityArgumentType.getPlayer(ctx, Names.target)
-
-    TPA_TABLE[target.uuid] = TpaData(sender.uuid, true)
-
-    sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.msg.here", { color(Formatting.GOLD) })  {
-        put("target") { LiteralText(target.entityName).withStyle { color(Formatting.WHITE) } }
-    }
-
+private fun sendTpaHereMsgTarget(sender: ServerPlayerEntity, target: ServerPlayerEntity) {
     target.sendStyledLangMsg(target.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.here", { color(Formatting.GOLD) }) {
         put("asker") { LiteralText(sender.entityName).withStyle { color(Formatting.WHITE) } }
         put("you") { target.langText(Nec.id, "${Nec.id}.tpa.req.you").withStyle { color(Formatting.GRAY) } }
@@ -168,57 +220,48 @@ fun tapHere(ctx: CommandContext<ServerCommandSource>): Int {
             clickEvent(ClickEvent.Action.RUN_COMMAND, "/${Names.tpano}")
         },
     )
+}
+
+fun tapHere(ctx: CommandContext<ServerCommandSource>): Int {
+    val source = ctx.source
+    val sender = source.player
+    val target = EntityArgumentType.getPlayer(ctx, Names.target)
+
+    if (target.uuid == sender.uuid) {
+        sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.sender.self") { color(Formatting.RED) }
+        return 1
+    }
+
+    TPA_TABLE[target.uuid] = TpaData(sender.uuid, true)
+
+    sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.sender.here", { color(Formatting.GOLD) })  {
+        put("target") { LiteralText(target.entityName).withStyle { color(Formatting.WHITE) } }
+    }
+
+    sendTpaHereMsgTarget(sender, target)
 
     return 1
 }
 
-fun tpaYes(ctx: CommandContext<ServerCommandSource>): Int {
+fun tpaAllHere(ctx: CommandContext<ServerCommandSource>): Int {
     val source = ctx.source
     val sender = source.player
 
-    val targetData = TPA_TABLE.remove(sender.uuid)
-    val target = if (targetData == null) null else source.minecraftServer.playerManager.getPlayer(targetData.id)
+    var sent = false
+    for (target in sender.server.playerManager.playerList) {
+        if (target.uuid == sender.uuid) continue
 
-    return if (targetData == null ||target == null) {
-        sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id,"${Nec.id}.tpa.res.msg.nil") { color(Formatting.RED) }
-        0
-    } else {
-        if (targetData.here) sender.tp(target) else target.tp(sender)
+        TPA_TABLE[target.uuid] = TpaData(sender.uuid, true)
 
-        sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.res.msg.yes", { color(Formatting.GREEN) }) {
-            put("asker") { LiteralText(target.entityName).withStyle { color(Formatting.WHITE) } }
-        }
-
-        target.sendStyledLangMsg(target.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.${if (targetData.here) "here" else "to"}.yes", { color(Formatting.GREEN) }) {
-            put("target") { LiteralText(sender.entityName).withStyle { color(Formatting.WHITE) } }
-        }
-        1
+        sendTpaHereMsgTarget(sender, target)
+        sent = true
     }
+
+    sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.sender.here.all") { color(Formatting.GOLD) }
+    if (!sent) sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.sender.alone") { color(Formatting.RED) }
+
+    return 1
 }
-
-fun tpaNo(ctx: CommandContext<ServerCommandSource>): Int {
-    val source = ctx.source
-    val sender = source.player
-
-    val targetData = TPA_TABLE.remove(sender.uuid)
-    val target = if (targetData == null) null else source.minecraftServer.playerManager.getPlayer(targetData.id)
-
-    return if (targetData == null || target == null) {
-        sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id,"${Nec.id}.tpa.res.msg.nil") { color(Formatting.RED) }
-        0
-    } else {
-        sender.sendStyledLangMsg(sender.tpPrefix(), Nec.id, "${Nec.id}.tpa.res.msg.no", { color(Formatting.RED) }) {
-            put("asker") { LiteralText(target.entityName).withStyle { color(Formatting.WHITE) } }
-        }
-
-        target.sendStyledLangMsg(target.tpPrefix(), Nec.id, "${Nec.id}.tpa.req.${if (targetData.here) "here" else "to"}.no", { color(Formatting.RED) }) {
-            put("target") { LiteralText(sender.entityName).withStyle { color(Formatting.WHITE) } }
-        }
-        1
-    }
-}
-
-
 
 
 
