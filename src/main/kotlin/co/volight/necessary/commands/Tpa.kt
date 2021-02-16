@@ -27,10 +27,8 @@ object Names {
     const val tpayes = "tpayes"
     const val tpano = "tpano"
     const val tpaccept = "tpaccept"
-    const val tpacc = "tpacc"
     const val tpdeny = "tpdeny"
     const val tpreject = "tpreject"
-    const val tprej = "tprej"
 }
 
 object Tpa {
@@ -53,9 +51,8 @@ object Tpa {
                     .executes(::tpaYes)
             )
             dispatcher.register(literal(Names.tpaccept).redirect(node))
-            dispatcher.register(literal(Names.tpacc).redirect(node))
         }
-        Nec.LOGGER.info("${Nec.logName} Command [${Names.tpayes}, ${Names.tpaccept}, ${Names.tpacc}] registered")
+        Nec.LOGGER.info("${Nec.logName} Command [${Names.tpayes}, ${Names.tpaccept}] registered")
 
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             val node = dispatcher.register(
@@ -64,9 +61,8 @@ object Tpa {
             )
             dispatcher.register(literal(Names.tpdeny).redirect(node))
             dispatcher.register(literal(Names.tpreject).redirect(node))
-            dispatcher.register(literal(Names.tprej).redirect(node))
         }
-        Nec.LOGGER.info("${Nec.logName} Command [${Names.tpano}, ${Names.tpdeny}, ${Names.tpreject}, ${Names.tprej}] registered")
+        Nec.LOGGER.info("${Nec.logName} Command [${Names.tpano}, ${Names.tpdeny}, ${Names.tpreject}] registered")
     }
 }
 
