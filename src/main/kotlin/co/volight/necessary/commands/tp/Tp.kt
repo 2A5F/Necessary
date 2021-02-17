@@ -1,7 +1,7 @@
 package co.volight.necessary.commands.tp
 
 import co.volight.necessary.Nec
-import co.volight.necessary.utils.tp
+import co.volight.necessary.utils.*
 import com.mojang.brigadier.context.CommandContext
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
 import net.minecraft.command.argument.EntityArgumentType

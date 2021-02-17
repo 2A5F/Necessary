@@ -3,7 +3,8 @@ package co.volight.necessary.commands.tpa
 import co.volight.expire.ExpireTable
 import co.volight.necessary.Nec
 import co.volight.necessary.text.*
-import co.volight.necessary.utils.tp
+import co.volight.necessary.utils.*
+import co.volight.necessary.utils.commands.*
 import com.mojang.brigadier.context.CommandContext
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
 import net.minecraft.command.argument.EntityArgumentType
@@ -43,54 +44,53 @@ object Names {
 object Tpa {
     fun reg() {
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            val node = dispatcher.register(
-                literal(Names.tpa)
-                    .then(
-                        argument(Names.target, EntityArgumentType.player())
-                            .executes(::tpa)
-                    )
-            )
-            dispatcher.register(literal(Names.tpask).redirect(node))
+            val node = dispatcher.reg(Names.tpa) {
+                argument(Names.target, EntityArgumentType.player()) {
+                    executes(::tpa)
+                }
+            }
+            dispatcher.reg(Names.tpask) { redirect(node) }
         }
         Nec.LOGGER.info("${Nec.logName} Command [${Names.tpa}, ${Names.tpask}] registered")
 
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            val node = dispatcher.register(
-                literal(Names.tpahere)
-                    .then(
-                        argument(Names.target, EntityArgumentType.player())
-                            .executes(::tapHere)
-                    )
-            )
-            dispatcher.register(literal(Names.tpask).redirect(node))
+            dispatcher.reg(Names.tpahere) {
+                argument(Names.target, EntityArgumentType.player()) {
+                    executes(::tapHere)
+                }
+            }
         }
         Nec.LOGGER.info("${Nec.logName} Command [${Names.tpahere}] registered")
 
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            val node = dispatcher.register(
-                literal(Names.tpaall)
-                    .executes(::tpaAllHere)
-            )
-            dispatcher.register(literal(Names.tpask).redirect(node))
+            dispatcher.reg(Names.tpaall) {
+                executes(::tpaAllHere)
+            }
         }
         Nec.LOGGER.info("${Nec.logName} Command [${Names.tpaall}] registered")
 
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            val node = dispatcher.register(
-                literal(Names.tpayes)
-                    .executes(::tpaYes)
-            )
-            dispatcher.register(literal(Names.tpaccept).redirect(node))
+            dispatcher.reg(Names.tpayes) {
+                executes(::tpaYes)
+            }
+            // no redirect, because mc bug
+            dispatcher.reg(Names.tpaccept) {
+                executes(::tpaYes)
+            }
         }
         Nec.LOGGER.info("${Nec.logName} Command [${Names.tpayes}, ${Names.tpaccept}] registered")
 
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            val node = dispatcher.register(
-                literal(Names.tpano)
-                    .executes(::tpaNo)
-            )
-            dispatcher.register(literal(Names.tpdeny).redirect(node))
-            dispatcher.register(literal(Names.tpreject).redirect(node))
+            dispatcher.reg(Names.tpano) {
+                executes(::tpaNo)
+            }
+            // no redirect, because mc bug
+            dispatcher.reg(Names.tpdeny) {
+                executes(::tpaNo)
+            }
+            dispatcher.reg(Names.tpreject) {
+                executes(::tpaNo)
+            }
         }
         Nec.LOGGER.info("${Nec.logName} Command [${Names.tpano}, ${Names.tpdeny}, ${Names.tpreject}] registered")
     }

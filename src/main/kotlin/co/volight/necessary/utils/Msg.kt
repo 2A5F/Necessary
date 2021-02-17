@@ -1,4 +1,4 @@
-package co.volight.necessary.commands.tpa
+package co.volight.necessary.utils
 
 import co.volight.cell.Cell
 import co.volight.necessary.Nec
