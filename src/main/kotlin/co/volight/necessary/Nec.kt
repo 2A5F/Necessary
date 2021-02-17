@@ -1,6 +1,7 @@
 package co.volight.necessary
 
 import co.volight.necessary.commands.suicide.Suicide
+import co.volight.necessary.commands.tp.Tp
 import co.volight.necessary.commands.tpa.Tpa
 import co.volight.necessary.events.PlayerLangInfo
 import co.volight.necessary.lang.Lang
@@ -23,6 +24,7 @@ fun regEvents() {
 }
 
 fun regCommands() {
+    Tp.reg()
     Tpa.reg()
     Suicide.reg()
 }

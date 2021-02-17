@@ -5,9 +5,9 @@ Essentials in fabric
 - [x] tpa
 - [x] tpahere
 - [x] tpaall
-- [ ] top
-- [ ] tpall
-- [ ] tphere
+- [x] tpall
+- [x] tphere
+- [ ] spawn
 - [ ] home
 - [ ] sethome
 - [ ] delhome
@@ -16,6 +16,7 @@ Essentials in fabric
 - [ ] setwarp
 - [ ] delwarp
 - [x] suicide
+- [ ] top
 - [ ] hat
 - [ ] workbench
 - [ ] ... more todo
