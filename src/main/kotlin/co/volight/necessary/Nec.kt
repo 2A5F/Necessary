@@ -1,5 +1,6 @@
 package co.volight.necessary
 
+import co.volight.necessary.commands.spawn.Spawn
 import co.volight.necessary.commands.suicide.Suicide
 import co.volight.necessary.commands.tp.Tp
 import co.volight.necessary.commands.tpa.Tpa
@@ -26,5 +27,6 @@ fun regEvents() {
 fun regCommands() {
     Tp.reg()
     Tpa.reg()
+    Spawn.reg()
     Suicide.reg()
 }

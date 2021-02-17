@@ -7,7 +7,7 @@ Essentials in fabric
 - [x] tpaall
 - [x] tpall
 - [x] tphere
-- [ ] spawn
+- [x] spawn
 - [ ] home
 - [ ] sethome
 - [ ] delhome
