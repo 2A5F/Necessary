@@ -1,6 +1,7 @@
 package co.volight.necessary
 
-import co.volight.necessary.commands.Tpa
+import co.volight.necessary.commands.suicide.Suicide
+import co.volight.necessary.commands.tpa.Tpa
 import co.volight.necessary.events.PlayerLangInfo
 import co.volight.necessary.lang.Lang
 import org.apache.logging.log4j.LogManager
@@ -23,4 +24,5 @@ fun regEvents() {
 
 fun regCommands() {
     Tpa.reg()
+    Suicide.reg()
 }

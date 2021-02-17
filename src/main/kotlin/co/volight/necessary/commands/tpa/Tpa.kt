@@ -1,4 +1,4 @@
-package co.volight.necessary.commands
+package co.volight.necessary.commands.tpa
 
 import co.volight.expire.ExpireTable
 import co.volight.necessary.Nec
@@ -254,6 +254,7 @@ fun tpaAllHere(ctx: CommandContext<ServerCommandSource>): Int {
         TPA_TABLE[target.uuid] = TpaData(sender.uuid, true)
 
         sendTpaHereMsgTarget(sender, target)
+
         sent = true
     }
 

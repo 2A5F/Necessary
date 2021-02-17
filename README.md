@@ -15,7 +15,7 @@ Essentials in fabric
 - [ ] warp
 - [ ] setwarp
 - [ ] delwarp
-- [ ] suicide
+- [x] suicide
 - [ ] hat
 - [ ] workbench
 - [ ] ... more todo
