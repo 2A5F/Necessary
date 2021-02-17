@@ -2,6 +2,8 @@ package co.volight.necessary.commands.tp
 
 import co.volight.necessary.Nec
 import co.volight.necessary.utils.*
+import co.volight.necessary.utils.commands.argument
+import co.volight.necessary.utils.commands.reg
 import com.mojang.brigadier.context.CommandContext
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
 import net.minecraft.command.argument.EntityArgumentType
@@ -19,23 +21,20 @@ object Names {
 object Tp {
     fun reg() {
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            dispatcher.register(
-                CommandManager.literal(Names.tphere)
-                    .requires { it.hasPermissionLevel(2) }
-                    .then(
-                        CommandManager.argument(Names.target, EntityArgumentType.player())
-                            .executes(::tpHere)
-                    )
-            )
+            dispatcher.reg(Names.tphere) {
+                requires { it.hasPermissionLevel(2) }
+                argument(Names.target, EntityArgumentType.player()) {
+                    executes(::tpHere)
+                }
+            }
         }
         Nec.LOGGER.info("${Nec.logName} Command [${Names.tphere}] registered")
 
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            dispatcher.register(
-                CommandManager.literal(Names.tpall)
-                    .requires { it.hasPermissionLevel(2) }
-                    .executes(::tpAll)
-            )
+            dispatcher.reg(Names.tpall) {
+                requires { it.hasPermissionLevel(2) }
+                executes(::tpAll)
+            }
         }
         Nec.LOGGER.info("${Nec.logName} Command [${Names.tpall}] registered")
     }

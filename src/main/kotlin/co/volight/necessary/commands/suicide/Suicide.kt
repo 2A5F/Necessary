@@ -1,6 +1,7 @@
 package co.volight.necessary.commands.suicide
 
 import co.volight.necessary.Nec
+import co.volight.necessary.utils.commands.reg
 import com.mojang.brigadier.context.CommandContext
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
 import net.minecraft.server.command.CommandManager
@@ -13,10 +14,9 @@ object Names {
 object Suicide {
     fun reg() {
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            dispatcher.register(
-                CommandManager.literal(Names.suicide)
-                    .executes(::suicide)
-            )
+            dispatcher.reg(Names.suicide) {
+                executes(::suicide)
+            }
         }
         Nec.LOGGER.info("${Nec.logName} Command [${Names.suicide}] registered")
     }

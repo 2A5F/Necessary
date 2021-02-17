@@ -1,9 +1,9 @@
 package co.volight.necessary.commands.spawn
 
 import co.volight.necessary.Nec
+import co.volight.necessary.utils.commands.*
 import com.mojang.brigadier.context.CommandContext
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
-import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 
 object Names {
@@ -13,10 +13,9 @@ object Names {
 object Spawn {
     fun reg() {
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            dispatcher.register(
-                CommandManager.literal(Names.spawn)
-                    .executes(::spawn)
-            )
+            dispatcher.reg(Names.spawn) {
+                executes(::spawn)
+            }
         }
         Nec.LOGGER.info("${Nec.logName} Command [${Names.spawn}] registered")
     }
